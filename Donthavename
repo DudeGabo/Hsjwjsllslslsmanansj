@@ -185,14 +185,6 @@ end)
 local function KILL_FPS()
 	limpiezaRapidaAsync()
 	task.spawn(cleanGunsFor4Seconds)
-
-	for i = 1,1 do
-		equipAll()
-		task.wait(0.02)
-		unequip()
-		task.wait(0.001)
-	end
-
 	task.wait(0.01)
 
 	local q = equipQuantum()
