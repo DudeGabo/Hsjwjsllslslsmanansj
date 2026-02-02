@@ -1,281 +1,471 @@
 local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
 local Workspace = game:GetService("Workspace")
-local Player = Players.LocalPlayer
-local PlayerGui = Player:WaitForChild("PlayerGui")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://84738434658812"
-sound.Volume = 1
-sound.Parent = PlayerGui
-sound:Play()
+local player = Players.LocalPlayer
 
-local OverlayGui = Instance.new("ScreenGui", PlayerGui)
-OverlayGui.IgnoreGuiInset = true
-OverlayGui.DisplayOrder = 1
+local gui = Instance.new("ScreenGui")
+gui.Name = "ArceusXv3Gui"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
 
-local Overlay = Instance.new("Frame", OverlayGui)
-Overlay.Size = UDim2.new(1,0,1,0)
-Overlay.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Overlay.BackgroundTransparency = 0.4
-Overlay.ZIndex = 10
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 200, 0, 190)
+frame.Position = UDim2.new(1, -210, 0, 20)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.Active = true
+frame.Parent = gui
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 14)
 
-local OverlayText = Instance.new("TextLabel", Overlay)
-OverlayText.Size = UDim2.new(1,0,1,0)
-OverlayText.BackgroundTransparency = 1
-OverlayText.Text = "ArceusX Exploits"
-OverlayText.Font = Enum.Font.GothamBlack
-OverlayText.TextScaled = true
-OverlayText.TextColor3 = Color3.fromRGB(255,0,0)
-OverlayText.TextStrokeTransparency = 0
-OverlayText.TextTransparency = 1
-OverlayText.ZIndex = 11
+local stroke = Instance.new("UIStroke", frame)
+stroke.Thickness = 2
+stroke.Color = Color3.fromRGB(255, 0, 0)
+TweenService:Create(stroke, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), { Color = Color3.fromRGB(255, 200, 200) }):Play()
 
-TweenService:Create(OverlayText, TweenInfo.new(0.6), {
-	TextTransparency = 0
-}):Play()
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, -40, 0, 24)
+title.Position = UDim2.new(0, 10, 0, 6)
+title.BackgroundTransparency = 1
+title.Text = "ArceusX x Gabo v3"
+title.TextColor3 = Color3.fromRGB(255, 0, 0)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 15
+title.TextXAlignment = Enum.TextXAlignment.Left
 
-task.delay(2, function()
-	TweenService:Create(Overlay, TweenInfo.new(0.6), {
-		BackgroundTransparency = 1
-	}):Play()
-	TweenService:Create(OverlayText, TweenInfo.new(0.6), {
-		TextTransparency = 1
-	}):Play()
-	task.delay(0.6, function()
-		OverlayGui:Destroy()
-	end)
+local subtitle = Instance.new("TextLabel", frame)
+subtitle.Size = UDim2.new(1, -20, 0, 18)
+subtitle.Position = UDim2.new(0, 10, 0, 26)
+subtitle.BackgroundTransparency = 1
+subtitle.Text = "Private | SCRIPT GRATIS, FREE SCRIPT"
+subtitle.TextColor3 = Color3.fromRGB(255, 100, 100)
+subtitle.Font = Enum.Font.Gotham
+subtitle.TextSize = 10
+subtitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local minimize = Instance.new("TextButton", frame)
+minimize.Size = UDim2.new(0, 22, 0, 22)
+minimize.Position = UDim2.new(1, -28, 0, 6)
+minimize.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+minimize.Text = "-"
+minimize.TextColor3 = Color3.fromRGB(255, 0, 0)
+minimize.Font = Enum.Font.GothamBold
+minimize.TextSize = 18
+Instance.new("UICorner", minimize).CornerRadius = UDim.new(1, 0)
+
+local fpsButton = Instance.new("TextButton", frame)
+fpsButton.Size = UDim2.new(0, 155, 0, 34)
+fpsButton.Position = UDim2.new(0.5, -77, 0, 50)
+fpsButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+fpsButton.Text = "FPS KILLER"
+fpsButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+fpsButton.Font = Enum.Font.GothamBold
+fpsButton.TextSize = 14
+Instance.new("UICorner", fpsButton).CornerRadius = UDim.new(0, 10)
+
+local autoLaserText = Instance.new("TextLabel", frame)
+autoLaserText.Size = UDim2.new(0, 85, 0, 20)
+autoLaserText.Position = UDim2.new(0, 10, 0, 90)
+autoLaserText.BackgroundTransparency = 1
+autoLaserText.Text = "Auto-Laser:"
+autoLaserText.TextColor3 = Color3.fromRGB(255, 100, 100)
+autoLaserText.Font = Enum.Font.Gotham
+autoLaserText.TextSize = 12
+
+local autoLaserOn = false
+local autoLaserButton = Instance.new("TextButton", frame)
+autoLaserButton.Size = UDim2.new(0, 60, 0, 22)
+autoLaserButton.Position = UDim2.new(0, 95, 0, 90)
+autoLaserButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+autoLaserButton.Text = "OFF"
+autoLaserButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+autoLaserButton.Font = Enum.Font.GothamBold
+autoLaserButton.TextSize = 12
+Instance.new("UICorner", autoLaserButton).CornerRadius = UDim.new(0, 8)
+
+autoLaserButton.MouseButton1Click:Connect(function()
+    autoLaserOn = not autoLaserOn
+    autoLaserButton.Text = autoLaserOn and "ON" or "OFF"
 end)
 
-local ScreenGui = Instance.new("ScreenGui", PlayerGui)
-ScreenGui.IgnoreGuiInset = true
-ScreenGui.DisplayOrder = 10
+local speedStealText = Instance.new("TextLabel", frame)
+speedStealText.Size = UDim2.new(0, 85, 0, 20)
+speedStealText.Position = UDim2.new(0, 10, 0, 120)
+speedStealText.BackgroundTransparency = 1
+speedStealText.Text = "Speed-Steal:"
+speedStealText.TextColor3 = Color3.fromRGB(255, 100, 100)
+speedStealText.Font = Enum.Font.Gotham
+speedStealText.TextSize = 12
 
-local Frame = Instance.new("Frame", ScreenGui)
-Frame.Size = UDim2.new(0,220,0,200)
-Frame.Position = UDim2.new(0.5,-110,0.5,-100)
-Frame.BackgroundColor3 = Color3.fromRGB(12,12,12)
-Frame.BorderSizePixel = 0
-Frame.Visible = false
-Frame.ZIndex = 20
+local speedStealOn = false
+local speedStealButton = Instance.new("TextButton", frame)
+speedStealButton.Size = UDim2.new(0, 60, 0, 22)
+speedStealButton.Position = UDim2.new(0, 95, 0, 120)
+speedStealButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+speedStealButton.Text = "OFF"
+speedStealButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+speedStealButton.Font = Enum.Font.GothamBold
+speedStealButton.TextSize = 12
+Instance.new("UICorner", speedStealButton).CornerRadius = UDim.new(0, 8)
 
-Instance.new("UICorner", Frame).CornerRadius = UDim.new(0,12)
+speedStealButton.MouseButton1Click:Connect(function()
+    speedStealOn = not speedStealOn
+    speedStealButton.Text = speedStealOn and "ON" or "OFF"
+end)
 
-local frameStroke = Instance.new("UIStroke", Frame)
-frameStroke.Color = Color3.fromRGB(255,0,0)
-frameStroke.Thickness = 2
-frameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+-- NUEVO TEXTBOX MODIFICADO
+local speedValueBox = Instance.new("TextBox", frame)
+speedValueBox.Size = UDim2.new(0, 30, 0, 18) -- más pequeño
+speedValueBox.Position = UDim2.new(0, 160, 0, 120)
+speedValueBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+speedValueBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+speedValueBox.Font = Enum.Font.GothamBold
+speedValueBox.TextSize = 14 -- más gordo
+speedValueBox.Text = "27.5"
+speedValueBox.ClearTextOnFocus = false
+speedValueBox.PlaceholderText = "27.5"
+local corner = Instance.new("UICorner", speedValueBox)
+corner.CornerRadius = UDim.new(1, 0) -- bordes circulares
+speedValueBox.FocusLost:Connect(function(enterPressed)
+    local val = tonumber(speedValueBox.Text)
+    if val then
+        if val < 20 then val = 20 end
+        if val > 35 then val = 35 end
+        speedValueBox.Text = tostring(val)
+    else
+        speedValueBox.Text = "27.5"
+    end
+end)
+local statusLabel = Instance.new("TextLabel", frame)
+statusLabel.Size = UDim2.new(1, -20, 0, 18)
+statusLabel.Position = UDim2.new(0, 10, 0, 150)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = "Status: waiting 5s"
+statusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+statusLabel.Font = Enum.Font.Gotham
+statusLabel.TextSize = 12
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 
-local Title = Instance.new("TextLabel", Frame)
-Title.Size = UDim2.new(1,-20,0,55)
-Title.Position = UDim2.new(0,10,0,8)
-Title.BackgroundTransparency = 1
-Title.Text = "ArceusX Private v4\n(Fps Devour)"
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 15
-Title.TextWrapped = true
-Title.TextColor3 = Color3.fromRGB(200,0,0)
-Title.ZIndex = 21
+local discordButton = Instance.new("TextButton", frame)
+discordButton.Size = UDim2.new(1, -20, 0, 18)
+discordButton.Position = UDim2.new(0, 10, 0, 170)
+discordButton.BackgroundTransparency = 1
+discordButton.Text = "DC: https://discord.gg/kDg4zzSzS"
+discordButton.TextColor3 = Color3.fromRGB(255, 100, 100)
+discordButton.Font = Enum.Font.Gotham
+discordButton.TextSize = 12
+discordButton.TextXAlignment = Enum.TextXAlignment.Left
+discordButton.AutoButtonColor = true
+discordButton.MouseButton1Click:Connect(function()
+    setclipboard("https://discord.gg/kDg4zzSzS")
+    discordButton.Text = "Copied!"
+    task.wait(1)
+    discordButton.Text = "DC: https://discord.gg/kDg4zzSzS"
+end)
 
-local ButtonMain = Instance.new("TextButton", Frame)
-ButtonMain.Size = UDim2.new(0,150,0,38)
-ButtonMain.Position = UDim2.new(0.5,-75,0.5,-15)
-ButtonMain.BackgroundColor3 = Color3.fromRGB(130,0,0)
-ButtonMain.Text = "Fps Devour"
-ButtonMain.Font = Enum.Font.GothamBold
-ButtonMain.TextSize = 14
-ButtonMain.TextColor3 = Color3.fromRGB(255,255,255)
-ButtonMain.ZIndex = 21
+local axButton = Instance.new("TextButton", gui)
+axButton.Size = UDim2.new(0, 50, 0, 50)
+axButton.Position = UDim2.new(1, -70, 0, 20)
+axButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+axButton.Text = "AXG"
+axButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+axButton.Font = Enum.Font.GothamBold
+axButton.TextSize = 18
+axButton.Visible = false
+Instance.new("UICorner", axButton).CornerRadius = UDim.new(1, 0)
 
-Instance.new("UICorner", ButtonMain).CornerRadius = UDim.new(0,10)
+local canActivate = false
 
-local btnStroke = Instance.new("UIStroke", ButtonMain)
-btnStroke.Color = Color3.fromRGB(255,0,0)
-btnStroke.Thickness = 1.5
-btnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
-local function getChar()
-	local char = Player.Character or Player.CharacterAdded:Wait()
-	local hum = char:WaitForChild("Humanoid")
-	return char, hum
-end
-
-local function equipAll()
-	local char = getChar()
-	for _, tool in ipairs(Player.Backpack:GetChildren()) do
-		if tool:IsA("Tool") then
-			tool.Parent = char
-		end
-	end
-end
-
-local function unequip()
-	local _, hum = getChar()
-	hum:UnequipTools()
-end
-
-local function equipQuantum()
-	local _, hum = getChar()
-	local q = Player.Backpack:FindFirstChild("Quantum Cloner")
-	if q then
-		hum:EquipTool(q)
-	end
-	return q
-end
-
-local function cleanGunsFor4Seconds()
-	local start = tick()
-	while tick() - start < 4 do
-		for _, obj in ipairs(Workspace:GetDescendants()) do
-			if obj:IsA("Tool") then
-				for _, d in ipairs(obj:GetDescendants()) do
-					if d:IsA("BasePart") then
-						d.LocalTransparencyModifier = 1
-					elseif d:IsA("Decal") or d:IsA("Texture") then
-						d.Transparency = 1
-					end
-				end
-			end
-		end
-		task.wait(0.1)
-	end
-end
-
+task.spawn(function()
+    for i = 5, 0, -1 do
+        statusLabel.Text = "Status: waiting " .. i .. "s"
+        task.wait(1)
+    end
+    statusLabel.Text = "Status: Ready"
+    canActivate = true
+end)
 local function limpiarCharacter(char)
-	if not char then return end
-	for _, obj in ipairs(char:GetChildren()) do
-		if obj:IsA("Accessory")
-		or obj:IsA("Shirt")
-		or obj:IsA("Pants")
-		or obj:IsA("ShirtGraphic")
-		or obj:IsA("BodyColors")
-		or obj:IsA("CharacterMesh")
-		or obj:IsA("Hat") then
-			obj:Destroy()
-		end
-	end
+    if not char then return end
+    for _, obj in ipairs(char:GetChildren()) do
+        if obj:IsA("Accessory") or obj:IsA("Shirt") or obj:IsA("Pants") or obj:IsA("ShirtGraphic") or obj:IsA("BodyColors") or obj:IsA("CharacterMesh") or obj:IsA("Hat") then
+            obj:Destroy()
+        end
+    end
 end
 
 local function limpiarTodos()
-	for _, hum in ipairs(Workspace:GetDescendants()) do
-		if hum:IsA("Humanoid") and hum.Parent then
-			limpiarCharacter(hum.Parent)
-		end
-	end
+    for _, hum in ipairs(Workspace:GetDescendants()) do
+        if hum:IsA("Humanoid") and hum.Parent then
+            limpiarCharacter(hum.Parent)
+        end
+    end
 end
 
 local function limpiezaRapidaAsync()
-	task.spawn(function()
-		local start = os.clock()
-		while os.clock() - start < 3 do
-			limpiarTodos()
-			task.wait(0.3)
-		end
-	end)
+    task.spawn(function()
+        local start = os.clock()
+        while os.clock() - start < 2 do
+            limpiarTodos()
+            task.wait(0.3)
+        end
+    end)
 end
+
+local function ejecutarFpsKiller()
+    limpiezaRapidaAsync()
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    local backpack = player:WaitForChild("Backpack")
+    local qc = backpack:FindFirstChild("Quantum Cloner")
+    if qc then
+        humanoid:EquipTool(qc)
+        for _, tool in ipairs(backpack:GetChildren()) do
+            if tool:IsA("Tool") and tool ~= qc then
+                tool.Parent = character
+            end
+        end
+        task.wait(0.01)
+        qc:Activate()
+        task.wait(0.1)
+        humanoid:UnequipTools()
+    end
+end
+
+local autoLaserLoop
+local function activarAutoLaser()
+    if autoLaserLoop then return end
+    local humanoid, lastEquip = nil, 0
+    local SHOT_DELAY = 0.25
+    local EQUIP_DELAY = 0.5
+    local lastShot = 0
+
+    local function setupCharacter(char)
+        humanoid = char:WaitForChild("Humanoid")
+    end
+
+    if player.Character then setupCharacter(player.Character) end
+    player.CharacterAdded:Connect(setupCharacter)
+
+    local function getNearestPlayer()
+        local char = player.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if not hrp then return nil end
+        local nearest, dist = nil, math.huge
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= player and plr.Character then
+                local thrp = plr.Character:FindFirstChild("HumanoidRootPart")
+                if thrp then
+                    local d = (thrp.Position - hrp.Position).Magnitude
+                    if d < dist then
+                        dist = d
+                        nearest = plr
+                    end
+                end
+            end
+        end
+        return nearest
+    end
+
+    local function getTool()
+        local backpack = player:FindFirstChild("Backpack")
+        return backpack and backpack:FindFirstChild("Laser Cape")
+    end
+
+    local function isLaserCapeEquipped()
+        local char = player.Character
+        return char and char:FindFirstChild("Laser Cape") ~= nil
+    end
+
+    local function unequipAllTools()
+        local char = player.Character
+        local backpack = player:WaitForChild("Backpack")
+        if not char then return end
+        for _, v in ipairs(char:GetChildren()) do
+            if v:IsA("Tool") then
+                v.Parent = backpack
+            end
+        end
+    end
+
+    local function equipLaserCape()
+        if isLaserCapeEquipped() then return true end
+        if tick() - lastEquip < EQUIP_DELAY then return false end
+        lastEquip = tick()
+        local tool = getTool()
+        if not tool then
+            pcall(function()
+                ReplicatedStorage.Packages.Net["RF/CoinsShopService/RequestBuy"]:InvokeServer("Laser Cape")
+            end)
+            task.wait(0.2)
+            tool = getTool()
+        end
+        if tool and player.Character then
+            tool.Parent = player.Character
+            return true
+        end
+        return false
+    end
+
+    local function fireLaserCape(part)
+        ReplicatedStorage.Packages.Net["RE/UseItem"]:FireServer(Vector3.new(-481, -6, -64), part)
+    end
+
+    autoLaserLoop = task.spawn(function()
+        while true do
+            if not autoLaserOn then
+                unequipAllTools()
+                autoLaserLoop = nil
+                break
+            end
+            if humanoid and humanoid.Health > 0 then
+                if tick() - lastShot >= SHOT_DELAY then
+                    local target = getNearestPlayer()
+                    if target and target.Character then
+                        if equipLaserCape() then
+                            local hitPart = target.Character:FindFirstChild("UpperTorso") or target.Character:FindFirstChild("HumanoidRootPart") or target.Character:FindFirstChild("Head")
+                            if hitPart then
+                                fireLaserCape(hitPart)
+                                lastShot = tick()
+                            end
+                        end
+                    end
+                end
+            end
+            task.wait(0.05)
+        end
+    end)
+
+    task.spawn(function()
+        task.wait(0.1)
+        unequipAllTools()
+        equipLaserCape()
+    end)
+end
+
+local function activarSpeedSteal()
+    if not speedStealOn then return end
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    local backpack = player:WaitForChild("Backpack")
+    task.spawn(function()
+        while speedStealOn do
+            local stealTool = backpack:FindFirstChild("AP Tool")
+            if stealTool and humanoid then
+                stealTool.Parent = character
+                pcall(function() stealTool:Activate() end)
+                task.wait(0.1)
+                stealTool.Parent = backpack
+            end
+            task.wait(0.5)
+        end
+    end)
+end
+
+fpsButton.MouseButton1Click:Connect(function()
+    if not canActivate then return end
+    statusLabel.Text = "Status: Activated"
+    statusLabel.TextColor3 = Color3.fromRGB(255,0,0)
+    ejecutarFpsKiller()
+    if autoLaserOn then
+        task.spawn(function()
+            task.wait(0.1)
+            activarAutoLaser()
+        end)
+    end
+    if speedStealOn then
+        task.spawn(function()
+            task.wait(0.1)
+            activarSpeedSteal()
+        end)
+    end
+end)
+
+minimize.MouseButton1Click:Connect(function()
+    frame.Visible = false
+    axButton.Visible = true
+end)
+
+axButton.MouseButton1Click:Connect(function()
+    frame.Visible = true
+    axButton.Visible = false
+end)
+
+local function makeDraggable(obj)
+    local dragging, dragStart, startPos = false, nil, nil
+    obj.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = obj.Position
+        end
+    end)
+    obj.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging then
+            local delta = input.Position - dragStart
+            obj.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end)
+end
+
+makeDraggable(frame)
+makeDraggable(axButton)
 
 task.spawn(function()
-	limpiarTodos()
-	while true do
-		task.wait(5)
-		limpiarTodos()
-	end
+    while true do
+        limpiarTodos()
+        task.wait(5)
+    end
 end)
 
-local function KILL_FPS()
-	limpiezaRapidaAsync()
-	task.spawn(cleanGunsFor4Seconds)
-	task.wait(0.01)
+local WALK_THRESHOLD = 0.6
+local JUMP_THRESHOLD = 0.6
+local COOLDOWN = 4
 
-	local q = equipQuantum()
-	if not q then return end
+local nerfHumanoid
+local baseWalk, baseJump
+local lastTrigger = 0
 
-	task.wait(0.01)
-	equipAll()
-	q:Activate()
-	task.wait(0.2)
-	unequip()
+local function setupNerf(char)
+    nerfHumanoid = char:WaitForChild("Humanoid")
+    baseWalk = nerfHumanoid.WalkSpeed
+    baseJump = nerfHumanoid.JumpPower
+    lastTrigger = 0
 end
 
-ButtonMain.MouseButton1Click:Connect(function()
-	KILL_FPS()
+if player.Character then
+    setupNerf(player.Character)
+end
+
+player.CharacterAdded:Connect(setupNerf)
+
+RunService.Heartbeat:Connect(function()
+    if not nerfHumanoid or nerfHumanoid.Health <= 0 then return end
+
+    local nerfed =  
+        nerfHumanoid.WalkSpeed < baseWalk * WALK_THRESHOLD or  
+        nerfHumanoid.JumpPower < baseJump * JUMP_THRESHOLD  
+
+    local now = tick()  
+    if nerfed and now - lastTrigger >= COOLDOWN then  
+        lastTrigger = now  
+
+        if autoLaserOn then  
+            autoLaserOn = false  
+            if autoLaserButton then  
+                autoLaserButton.Text = "OFF"  
+            end  
+        end  
+    end
 end)
-
-local DiscordLink = "https://discord.gg/mEab5XQpb"
-
-local DiscordText = Instance.new("TextButton", Frame)
-DiscordText.Size = UDim2.new(1,-20,0,20)
-DiscordText.Position = UDim2.new(0,10,0.5,30)
-DiscordText.BackgroundTransparency = 1
-DiscordText.Text = DiscordLink
-DiscordText.Font = Enum.Font.Gotham
-DiscordText.TextSize = 12
-DiscordText.TextColor3 = Color3.fromRGB(255,80,80)
-DiscordText.TextWrapped = true
-DiscordText.ZIndex = 21
-DiscordText.AutoButtonColor = false
-
-DiscordText.MouseButton1Click:Connect(function()
-	if setclipboard then
-		setclipboard(DiscordLink)
-		DiscordText.Text = "Copied"
-		task.delay(1, function()
-			DiscordText.Text = DiscordLink
-		end)
-	end
-end)
-
-local ToggleButton = Instance.new("ImageButton", ScreenGui)
-ToggleButton.Size = UDim2.new(0,80,0,80)
-ToggleButton.Position = UDim2.new(0,10,0,60)
-ToggleButton.BackgroundTransparency = 1
-ToggleButton.Image = "rbxassetid://140042845160991"
-ToggleButton.ZIndex = 30
-
-Instance.new("UICorner", ToggleButton).CornerRadius = UDim.new(0,18)
-
-local toggleStroke = Instance.new("UIStroke", ToggleButton)
-toggleStroke.Color = Color3.fromRGB(0,0,0)
-toggleStroke.Thickness = 3
-toggleStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
-ToggleButton.MouseButton1Click:Connect(function()
-	Frame.Visible = not Frame.Visible
-end)
-
-local dragging, dragStart, startPos
-
-Frame.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = true
-		dragStart = input.Position
-		startPos = Frame.Position
-	end
-end)
-
-Frame.InputChanged:Connect(function(input)
-	if dragging and (
-		input.UserInputType == Enum.UserInputType.MouseMovement
-		or input.UserInputType == Enum.UserInputType.Touch
-	) then
-		local delta = input.Position - dragStart
-		Frame.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
-		)
-	end
-end)
-
-local CreditText = Instance.new("TextLabel", ScreenGui)
-CreditText.Size = UDim2.new(1,0,0,20)
-CreditText.Position = UDim2.new(0,0,0.5,140)
-CreditText.BackgroundTransparency = 1
-CreditText.Text = "By GaboTheGoat and ArceusX"
-CreditText.Font = Enum.Font.Gotham
-CreditText.TextScaled = true
-CreditText.TextColor3 = Color3.fromRGB(255,0,0)
-CreditText.TextStrokeTransparency = 0
-CreditText.ZIndex = 21
