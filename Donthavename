@@ -186,7 +186,7 @@ local function KILL_FPS()
 	limpiezaRapidaAsync()
 	task.spawn(cleanGunsFor4Seconds)
 
-	for i = 1,2 do
+	for i = 1,1 do
 		equipAll()
 		task.wait(0.02)
 		unequip()
